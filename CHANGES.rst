@@ -1,3 +1,10 @@
+v0.1.1
+------
+
+Released 2024-09-16
+
+- support send email
+
 v0.1.0
 ------
 

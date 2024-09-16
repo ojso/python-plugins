@@ -26,6 +26,11 @@ requires-python = ">=3.10"
 dependencies = [
 ]
 
+[project.optional-dependencies]
+cryptography = ["cryptography"]
+pillow = ["pillow"]
+qrcode = ["qrcode"]
+
 [project.urls]
 Documentation = "https://python-plugins.readthedocs.io"
 Source = "https://github.com/ojso/python-plugins"
