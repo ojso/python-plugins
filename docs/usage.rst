@@ -35,3 +35,18 @@ email
 
    s = SmtpSSL(host, port, user, password)
    r = s.send_emsg(data)
+
+mixins
+======
+
+.. code-block:: python
+
+   from flask_sqlalchemy import SQLAlchemy
+   from python_plugins.models.mixins import PrimaryKeyMixin
+   from python_plugins.models.mixins import UserMixin
+   from python_plugins.models.mixins import TimestampMixin
+
+   db = SQLAlchemy()
+
+   class User(PrimaryKeyMixin,UserMixin, TimestampMixin,db.models):
+      pass

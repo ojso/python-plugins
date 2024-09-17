@@ -27,6 +27,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+sqlalchemy = ["SQLAlchemy"]
 cryptography = ["cryptography"]
 pillow = ["pillow"]
 qrcode = ["qrcode"]

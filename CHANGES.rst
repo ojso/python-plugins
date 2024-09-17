@@ -1,3 +1,10 @@
+v0.1.2
+------
+
+Released 2024-09-17
+
+- support sqlalchemy mixins
+
 v0.1.1
 ------
 
