@@ -1,3 +1,10 @@
+v0.1.3
+------
+
+Released 2024-09-19
+
+- support random_str,jwt,hash_file,fernet
+
 v0.1.2
 ------
 
