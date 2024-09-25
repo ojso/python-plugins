@@ -50,3 +50,12 @@ mixins
 
    class User(PrimaryKeyMixin,UserMixin, TimestampMixin,db.models):
       pass
+
+remove_pycache
+=======================
+
+.. code-block :: python
+
+    from  python_plugins.utils.remove_pycache import remove_pycache
+
+    remove_pycache(".")
