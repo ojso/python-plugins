@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from python_plugins.models.mixins import PrimaryKeyMixin
+from python_plugins.models.mixins import TokenMixin
 from python_plugins.models.mixins import DataMixin
 from python_plugins.models.mixins import TimestampMixin
 from sqlalchemy.orm import DeclarativeBase
@@ -13,7 +14,7 @@ class Base(DeclarativeBase):
     pass
 
 
-class Demo(PrimaryKeyMixin, DataMixin, TimestampMixin,Base):
+class Demo(PrimaryKeyMixin, TokenMixin, DataMixin, TimestampMixin, Base):
     __tablename__ = "demo"
 
 

@@ -44,18 +44,37 @@ mixins
    from flask_sqlalchemy import SQLAlchemy
    from python_plugins.models.mixins import PrimaryKeyMixin
    from python_plugins.models.mixins import UserMixin
+   from python_plugins.models.mixins import DataMixin
    from python_plugins.models.mixins import TimestampMixin
 
    db = SQLAlchemy()
 
-   class User(PrimaryKeyMixin,UserMixin, TimestampMixin,db.models):
-      pass
+   class User(PrimaryKeyMixin, DataMixin, TimestampMixin, UserMixin, db.models):
+      __tablename__ = "users"
 
 remove_pycache
 =======================
 
-.. code-block :: python
+.. code-block:: python
 
     from  python_plugins.utils.remove_pycache import remove_pycache
 
     remove_pycache(".")
+
+
+weixin.wechat
+==================
+
+.. code-block:: python
+
+   from python_plugins.weixin.wechat import Wechat
+
+   class MyWechat(Wechat):
+      def get_app(self) -> dict:
+         # may depended on self.name from self.__init__(name)
+         return "<your app>"
+
+   mywechat = MyWechat("name")
+   mywechat.verify(query)
+   mywechat.chat(query,content)
+   

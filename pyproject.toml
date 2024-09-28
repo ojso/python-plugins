@@ -27,8 +27,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-sqlalchemy = ["SQLAlchemy"]
 cryptography = ["cryptography"]
+requests = ["requests"]
+sqlalchemy = ["SQLAlchemy"]
 pillow = ["pillow"]
 qrcode = ["qrcode"]
 jwt = ["PyJWT"]
