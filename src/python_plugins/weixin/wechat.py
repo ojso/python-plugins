@@ -117,7 +117,7 @@ class Wechat:
         # 返回前记录下日志，如果实现记录日志的话
         self.log_data()
 
-        return self.responseText(answer)
+        return answer
 
     def answer(self):
         q = self.keyword
