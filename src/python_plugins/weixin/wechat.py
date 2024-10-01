@@ -1,15 +1,7 @@
 import hashlib
-import time
 from python_plugins.convert import xml2dict
 from .wechat_crypt import MessageCrypt
-
-XML_TEXT_TEMPLATE = """<xml>
-<ToUserName><![CDATA[{touser}]]></ToUserName>
-<FromUserName><![CDATA[{fromuser}]]></FromUserName>
-<CreateTime>{createtime}</CreateTime>
-<MsgType><![CDATA[text]]></MsgType>
-<Content><![CDATA[{content}]]></Content>
-</xml>"""
+from .format_response import get_wechat_xml_response
 
 
 class Wechat:
@@ -32,7 +24,7 @@ class Wechat:
         nonce = args["nonce"]
         echostr = args["echostr"]
         token = self.app["token"]
-        tmpstr = "".join(sorted([token, timestamp, nonce])).encode("utf8")
+        tmpstr = "".join(sorted([token, timestamp, nonce])).encode()
         if hashlib.sha1(tmpstr).hexdigest() == signature:
             return echostr
         else:
@@ -48,41 +40,37 @@ class Wechat:
         xml_dict = xml2dict(content)
 
         if not encrypt_type:
-            # 未加密
-            result = self.dispatch(xml_dict)
-            xml_reponse = self.responseText(result)
+            self.input = xml_dict
+            self.dispatch()
+            self.get_xml_response()
+            xml_reponse = self.xml_response
         else:
-            # 解密
+            # decrypt
             mc = MessageCrypt(self.app["appid"], self.app["token"], self.app["aeskey"])
             xml_decrypted = mc.decrypt_msg(
                 timestamp, nonce, xml_dict["Encrypt"], msg_signature
             )
-            decrypted_dict = xml2dict(xml_decrypted)
-            result = self.dispatch(decrypted_dict)
-            unencrypted_xml = self.responseText(result)
-            # 加密
-            xml_reponse = mc.encrypt_msg(unencrypted_xml, timestamp, nonce)
+            self.input = xml2dict(xml_decrypted)
+            self.dispatch()
+            self.get_xml_response()
+            # encrypt
+            xml_reponse = mc.encrypt_msg(self.xml_response, timestamp, nonce)
+
+        # 返回前记录下日志，如果实现记录日志的话
+        self.log_data()
 
         return xml_reponse
 
-    def responseText(self, content):
-        data = {
-            "touser": self.fromUser,
-            "fromuser": self.toUser,
-            "createtime": int(time.time()),
-            "content": content,
-        }
-        return XML_TEXT_TEMPLATE.format(**data)
-
-    def dispatch(self, data):
-        self.toUser = data["ToUserName"]
-        self.fromUser = data["FromUserName"]
-        msgType = data["MsgType"]
+    def dispatch(self):
+        self.default_answer()
+        self.toUser = self.input["ToUserName"]
+        self.fromUser = self.input["FromUserName"]
+        msgType = self.input["MsgType"]
 
         if msgType == "text":
-            keyword = data["Content"]
+            keyword = self.input["Content"]
         elif msgType == "event":
-            event = data["Event"]
+            event = self.input["Event"]
             if event == "subscribe":
                 # self.onSubscribe()
                 keyword = "subscribe"
@@ -90,7 +78,7 @@ class Wechat:
                 # self.onUnsubscribe()
                 keyword = "unsubscribe"
             elif event == "CLICK":
-                eventKey = data["EventKey"]
+                eventKey = self.input["EventKey"]
                 keyword = eventKey
             else:
                 keyword = "<event:{event}>"
@@ -103,8 +91,8 @@ class Wechat:
         elif msgType == "shortvideo":
             keyword = f"<{msgType}>"
         elif msgType == "location":
-            location_x = data["location_x"]
-            location_y = data["location_y"]
+            location_x = self.input["location_x"]
+            location_y = self.input["location_y"]
             keyword = f"<{msgType}({location_x},{location_y})>"
         elif msgType == "link":
             keyword = f"<{msgType}>"
@@ -112,17 +100,36 @@ class Wechat:
             keyword = f"<{msgType}>"
 
         self.keyword = keyword
-        answer = self.answer()
 
-        # 返回前记录下日志，如果实现记录日志的话
-        self.log_data()
+        self.get_answer()
+        return
 
-        return answer
+    def default_answer(self):
+        self.answer = {"type": "text", "content": "I'm sorry, I don't understand."}
+        return
 
-    def answer(self):
-        q = self.keyword
-        if q == "subscribe":
-            r = f"您好,欢迎关注[{self.app['name']}]!"
-        else:
-            r = q
-        return r
+    def get_answer(self):
+        match self.keyword:
+            case "subscribe":
+                r = f"Hello, welcome to {self.app['name']}!"
+                self.answer = {"type": "text", "content": r}
+            case _:
+                self.answer = {"type": "text", "content": "a:" + self.keyword}
+        return
+
+    def get_xml_response(self):
+        self.data_response = {
+            "type" : self.answer["type"],
+            "toUser": self.fromUser,
+            "fromUser": self.toUser,
+        }
+        
+        match self.answer["type"]:
+            case "text":                
+                self.data_response["content"] = self.answer["content"]
+            case "news":
+                self.data_response["articles"] = self.answer["articles"]
+                
+        self.xml_response = get_wechat_xml_response(self.data_response)
+        
+        return

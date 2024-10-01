@@ -1,3 +1,10 @@
+v0.1.6
+------
+
+Released 2024-10-01
+
+- weixin.wechat support news
+
 v0.1.5
 ------
 
