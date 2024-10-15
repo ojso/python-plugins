@@ -1,6 +1,7 @@
 import hashlib
 from python_plugins.convert import xml2dict
 from .wechat_crypt import MessageCrypt
+from .wechat_crypt import get_signature
 from .format_response import get_wechat_xml_response
 
 
@@ -24,8 +25,7 @@ class Wechat:
         nonce = args["nonce"]
         echostr = args["echostr"]
         token = self.app["token"]
-        tmpstr = "".join(sorted([token, timestamp, nonce])).encode()
-        if hashlib.sha1(tmpstr).hexdigest() == signature:
+        if get_signature([token, timestamp, nonce]) == signature:
             return echostr
         else:
             return

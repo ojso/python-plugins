@@ -2,16 +2,22 @@ import pytest
 import time
 import hashlib
 from python_plugins.weixin.wechat import Wechat
+from python_plugins.weixin.wechat_crypt import get_signature
+from python_plugins.weixin.wechat_crypt import MessageCrypt
 from python_plugins.random import rand_digit, rand_letter
+from python_plugins.convert.xml import xml2dict
 
 
 test_wechat_app = {
     "name": "test",
-    "appid": "wx2c2769f8efd9abc2",
-    "token": "spamtest",
+    "appid": "wxabcdefghijklmnop",
+    "token": "testtest",
     "aeskey": "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFG",
-    "appsecret": "45658c05647671e481d75b6fa23e6add",
+    "appsecret": "abcdefghijklmnopqrstuvwxyz012345",
 }
+
+server_id = "gh_1234567890ab"
+openid = "abcdefghijklmnopqrstuvwxyz01"
 
 
 class MyWechat(Wechat):
@@ -22,15 +28,10 @@ class MyWechat(Wechat):
 class TestWechat:
     def test_verify(self):
         mywechat = MyWechat()
-        # timestamp = "1409735669"
         timestamp = str(int(time.time()))
-        # nonce = "1320562132"
         nonce = rand_digit(10)
         token = test_wechat_app["token"]
-        signature = hashlib.sha1(
-            "".join(sorted([token, timestamp, nonce])).encode("utf8")
-        ).hexdigest()
-        # echostr = "780419598460648693"
+        signature = get_signature([token, timestamp, nonce])
         echostr = rand_digit(18)
         query = {
             "timestamp": timestamp,
@@ -39,66 +40,93 @@ class TestWechat:
             "echostr": echostr,
         }
         r = mywechat.verify(query)
-        # print(r)
         assert r == echostr
 
     def test_chat(self):
         """chat（明文）"""
-        text = rand_letter(10)
+        input_text = rand_letter(10)
         timestamp = str(int(time.time()))
         nonce = rand_digit(10)
+
         xml = (
             "<xml>"
-            "<ToUserName><![CDATA[gh_73951532543e]]></ToUserName>"
-            "<FromUserName><![CDATA[oMIza6tX35aDNfoXr4JGP02QvM08]]></FromUserName>"
-            "<CreateTime>{timestamp}</CreateTime>"
+            f"<ToUserName><![CDATA[{server_id}]]></ToUserName>"
+            f"<FromUserName><![CDATA[{openid}]]></FromUserName>"
+            f"<CreateTime>{timestamp}</CreateTime>"
             "<MsgType><![CDATA[text]]></MsgType>"
-            f"<Content><![CDATA[{text}]]></Content>"
+            f"<Content><![CDATA[{input_text}]]></Content>"
             "<MsgId>23533248665819413</MsgId>"
             "</xml>"
         )
         query = {
             "timestamp": timestamp,
             "nonce": nonce,
-            "signature": "b5fa0bcde34ab0b6dccd6e23034c26c0cf5ecbaa",
-            "openid": "oMIza6tX35aDNfoXr4JGP02QvM08",
+            "openid": f"{openid}",
         }
 
         mywechat = MyWechat()
         r = mywechat.chat(query, xml)
-        # print(r)
-        assert query["openid"] in r
+        data = xml2dict(r)
+        # print(data)
+        assert data["ToUserName"] == openid
+        assert data["FromUserName"] == server_id
+        assert data["MsgType"] == "text"
+        assert input_text in data["Content"]
 
     def test_chat_aes(self):
-        """chat（密文），微信提供的demo"""
+        """chat（密文）"""
+        input_text = rand_letter(10)
+        timestamp = str(int(time.time()))
+        nonce = rand_digit(10)
+        mywechat = MyWechat()
+        app = mywechat.app
+        mc = MessageCrypt(app["appid"], app["token"], app["aeskey"])
+
         xml = (
             "<xml>"
-            "<ToUserName><![CDATA[gh_10f6c3c3ac5a]]></ToUserName>"
-            "<FromUserName><![CDATA[oyORnuP8q7ou2gfYjqLzSIWZf0rs]]></FromUserName>"
-            "<CreateTime>1409735668</CreateTime>"
+            f"<ToUserName><![CDATA[{server_id}]]></ToUserName>"
+            f"<FromUserName><![CDATA[{openid}]]></FromUserName>"
+            f"<CreateTime>{timestamp}</CreateTime>"
             "<MsgType><![CDATA[text]]></MsgType>"
-            "<Content><![CDATA[abcdteT]]></Content>"
+            f"<Content><![CDATA[{input_text}]]></Content>"
+            "<MsgId>23533248665819413</MsgId>"
+            "</xml>"
+        )
+
+        # 获取密文和签名
+        encrypt, msg_signature = mc.get_encrypt_sig(xml, timestamp, nonce)
+
+        xml2 = (
+            "<xml>"
+            f"<ToUserName><![CDATA[{server_id}]]></ToUserName>"
+            f"<FromUserName><![CDATA[{openid}]]></FromUserName>"
+            f"<CreateTime>{timestamp}</CreateTime>"
+            "<MsgType><![CDATA[text]]></MsgType>"
+            f"<Content><![CDATA[{input_text}]]></Content>"
             "<MsgId>6054768590064713728</MsgId>"
-            "<Encrypt>"
-            "<![CDATA[hyzAe4OzmOMbd6TvGdIOO6uBmdJoD0Fk53REIHvxYtJlE2B655HuD0m8KUePW"
-            "B3+LrPXo87wzQ1QLvbeUgmBM4x6F8PGHQHFVAFmOD2LdJF9FrXpbUAh0B5GIItb52sn896"
-            "wVsMSHGuPE328HnRGBcrS7C41IzDWyWNlZkyyXwon8T332jisa+h6tEDYsVticbSnyU8dK"
-            "OIbgU6ux5VTjg3yt+WGzjlpKn6NPhRjpA912xMezR4kw6KWwMrCVKSVCZciVGCgavjIQ6X"
-            "8tCOp3yZbGpy0VxpAe+77TszTfRd5RJSVO/HTnifJpXgCSUdUue1v6h0EIBYYI1BD1DlD+"
-            "C0CR8e6OewpusjZ4uBl9FyJvnhvQl+q5rv1ixrcpCumEPo5MJSgM9ehVsNPfUM669WuMyV"
-            "WQLCzpu9GhglF2PE=]]>"
-            "</Encrypt>"
+            f"<Encrypt><![CDATA[{encrypt}]]></Encrypt>"
             "</xml>"
         )
 
         query = {
-            "timestamp": "1409735669",
-            "nonce": "1320562132",
+            "timestamp": timestamp,
+            "nonce": nonce,
             "encrypt_type": "aes",
-            "msg_signature": "5d197aaffba7e9b25a30732f161a50dee96bd5fa",
+            "msg_signature": msg_signature,
         }
 
-        mywechat = MyWechat()
-        r = mywechat.chat(query, xml)
+        r = mywechat.chat(query, xml2)
         # print(r)
-        assert f'<Nonce><![CDATA[{query["nonce"]}]]></Nonce>' in r
+        r_dict = xml2dict(r)
+        r_xml = mc.decrypt_msg(
+            r_dict["TimeStamp"],
+            r_dict["Nonce"],
+            r_dict["Encrypt"],
+            r_dict["MsgSignature"],
+        )
+        data = xml2dict(r_xml)
+        # print(data)
+        assert data["ToUserName"] == openid
+        assert data["FromUserName"] == server_id
+        assert data["MsgType"] == "text"
+        assert input_text in data["Content"]

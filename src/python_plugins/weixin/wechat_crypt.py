@@ -12,10 +12,14 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
 ENCRYPT_TEXT_RESPONSE_TEMPLATE = """<xml>
 <Encrypt><![CDATA[{msg_encrypt}]]></Encrypt>
-<MsgSignature><![CDATA[{msg_signaturet}]]></MsgSignature>
+<MsgSignature><![CDATA[{msg_signature}]]></MsgSignature>
 <TimeStamp>{timestamp}</TimeStamp>
 <Nonce><![CDATA[{nonce}]]></Nonce>
 </xml>"""
+
+def get_signature(arr):
+    tmpstr = "".join(sorted(arr)).encode("utf-8")
+    return hashlib.sha1(tmpstr).hexdigest()
 
 
 class MessageCrypt:
@@ -24,26 +28,26 @@ class MessageCrypt:
         self.token = token
         self.key = base64.b64decode(aeskey + "=")
 
-    def get_sha1(self, token, timestamp, nonce, txt):
-        tmpstr = "".join(sorted([token, timestamp, nonce, txt])).encode("utf8")
-        return hashlib.sha1(tmpstr).hexdigest()
-
     def generate(self, encrypt, signature, timestamp, nonce):
         data = {
             "msg_encrypt": encrypt,
-            "msg_signaturet": signature,
+            "msg_signature": signature,
             "timestamp": timestamp,
             "nonce": nonce,
         }
         return ENCRYPT_TEXT_RESPONSE_TEMPLATE.format(**data)
 
-    def encrypt_msg(self, msg, timestamp, nonce):
+    def get_encrypt_sig(self, msg, timestamp, nonce):
         msg_encrypt = WechatCrypt.encrypt(msg, self.key, self.appid)
-        signature = self.get_sha1(self.token, timestamp, nonce, msg_encrypt)
+        signature = get_signature([self.token, timestamp, nonce, msg_encrypt])
+        return (msg_encrypt, signature)
+
+    def encrypt_msg(self, msg, timestamp, nonce):
+        msg_encrypt,signature = self.get_encrypt_sig(msg,timestamp,nonce)
         return self.generate(msg_encrypt, signature, timestamp, nonce)
 
     def decrypt_msg(self, timestamp, nonce, encrypt, msg_signature):
-        signature = self.get_sha1(self.token, timestamp, nonce, encrypt)
+        signature = get_signature([self.token, timestamp, nonce, encrypt])
         if signature != msg_signature:
             return "ValidateSignatureError"
         decrypted = WechatCrypt.decrypt(encrypt, self.key, self.appid)
