@@ -1,7 +1,7 @@
 import os
 import shutil
 
-def remove_pycache(dir_path):
+def remove_pycache(dir_path="."):
     for root, dirs, files in os.walk(dir_path):
         if "venv" in root or "git" in root:
             continue

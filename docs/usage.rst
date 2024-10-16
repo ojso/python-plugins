@@ -59,7 +59,8 @@ remove_pycache
 
     from  python_plugins.utils.remove_pycache import remove_pycache
 
-    remove_pycache(".")
+    remove_pycache()   # default is "."
+    remove_pycache("./tests")
 
 
 weixin.wechat

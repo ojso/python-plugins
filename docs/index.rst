@@ -1,7 +1,7 @@
 Welcome to python-plugins's documentation!
 ============================================
 
-**python-plugins** is a Flask extensions with admin, SQLAlchemy, babel, forms, fields, widgets, and so on.
+**python-plugins** is a collection with common python utils.
 
 .. toctree::
    :maxdepth: 2

@@ -1,3 +1,10 @@
+v0.1.7
+------
+
+Released 2024-10-16
+
+- change html_theme of docs to sphinx_rtd_theme
+
 v0.1.6
 ------
 
