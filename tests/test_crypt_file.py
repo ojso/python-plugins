@@ -2,10 +2,10 @@ import os
 import os.path as op
 import filecmp
 from python_plugins.random.random_str import rand_sentence
-from python_plugins.crypto.file_to_file import encrypt_txtfile
-from python_plugins.crypto.file_to_file import decrypt_txtfile
-from python_plugins.crypto.file_to_file import encrypt_file
-from python_plugins.crypto.file_to_file import decrypt_file
+from python_plugins.crypto import encrypt_txtfile
+from python_plugins.crypto import decrypt_txtfile
+from python_plugins.crypto import encrypt_file
+from python_plugins.crypto import decrypt_file
 
 
 tmp_path = op.join(os.path.dirname(os.path.abspath(__file__)), "tmp")
@@ -62,7 +62,33 @@ def test_crypto_file():
 
     _remove_testfiles()
 
-# pytest with `input()` must using `-s` 
+
+def test_crypto_file_multiple_prompt_lines():
+    create_tmp = _create_temp()
+    if create_tmp:
+        print(create_tmp)
+
+    prompt = "prompt_1\nprompt_2"
+    prompt_lines = len(prompt.split("\n"))
+
+    with open(path_1, "w") as f:
+        f.write(rand_sentence(30))
+        f.write(rand_sentence(30))
+
+    encrypt_txtfile(path_1, path_2, prompt=prompt)
+    decrypt_txtfile(path_2, path_3, prompt_lines)
+    cmp_result = filecmp.cmp(path_1, path_3)
+    assert cmp_result is True
+
+    encrypt_file(path_1, path_4, prompt=prompt)
+    decrypt_file(path_2, path_5, prompt_lines)
+    cmp_result = filecmp.cmp(path_1, path_5)
+    assert cmp_result is True
+
+    _remove_testfiles()
+
+
+# pytest with `input()` must using `-s`
 # pytest tests\test_crypt_file.py::test_crypto_file_with_password -s
 def _test_crypto_file_with_password():
     prompt = "test"

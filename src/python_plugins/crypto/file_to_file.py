@@ -47,15 +47,21 @@ def encrypt_txt(s: str, prompt=None, accept_password=False):
     return s2
 
 
-def decrypt_txt(s: str):
+def decrypt_txt(s: str, prompt_lines,lines):
     encrypted_list = s.split("\n")
-    prompt = encrypted_list[0]
-    if encrypted_list[1] == "-":
-        print(prompt)
+    prompt = encrypted_list[0:prompt_lines]
+    # print(prompt)
+    if encrypted_list[prompt_lines] == "-":
         password = getpass("input password=")
-        s2 = decrypt_list_to_str(encrypted_list[1:], password)
+        if lines:
+            s2 = decrypt_list_to_str(encrypted_list[prompt_lines:prompt_lines+lines], password)
+        else:
+            s2 = decrypt_list_to_str(encrypted_list[prompt_lines:], password)
     else:
-        s2 = decrypt_list_to_str(encrypted_list[1:])
+        if lines:
+            s2 = decrypt_list_to_str(encrypted_list[prompt_lines:prompt_lines+lines])
+        else:
+            s2 = decrypt_list_to_str(encrypted_list[prompt_lines:])
 
     return s2
 
@@ -66,10 +72,13 @@ def encrypt_txtfile(fin, fout, prompt=None, accept_password=False):
     str_to_txtfile(s2, fout)
 
 
-def decrypt_txtfile(fin, fout):
+def decrypt_txtfile(fin, fout=None, prompt_lines=1,lines=0):
     s = str_from_txtfile(fin)
-    s2 = decrypt_txt(s)
-    str_to_txtfile(s2, fout)
+    s2 = decrypt_txt(s, prompt_lines,lines)
+    if fout:
+        str_to_txtfile(s2, fout)
+    else:
+        print(fout)
 
 
 def encrypt_bytes(s: bytes, prompt=None, accept_password=False):
@@ -87,15 +96,21 @@ def encrypt_bytes(s: bytes, prompt=None, accept_password=False):
     return s2
 
 
-def decrypt_bytes(s: str):
+def decrypt_bytes(s: str, prompt_lines,lines):
     encrypted_list = s.split("\n")
-    prompt = encrypted_list[0]
-    if encrypted_list[1] == "-":
-        print(prompt)
+    prompt = encrypted_list[0:prompt_lines]
+    # print(prompt)
+    if encrypted_list[prompt_lines] == "-":
         password = getpass("input password=")
-        s2 = decrypt_list_to_bytes(encrypted_list[1:], password)
+        if lines:
+            s2 = decrypt_list_to_bytes(encrypted_list[prompt_lines:prompt_lines+lines], password)
+        else:
+            s2 = decrypt_list_to_bytes(encrypted_list[prompt_lines:], password)
     else:
-        s2 = decrypt_list_to_bytes(encrypted_list[1:])
+        if lines:
+            s2 = decrypt_list_to_bytes(encrypted_list[prompt_lines:prompt_lines+lines])
+        else:
+            s2 = decrypt_list_to_bytes(encrypted_list[prompt_lines:])
 
     return s2
 
@@ -106,7 +121,7 @@ def encrypt_file(fin, fout, prompt=None, accept_password=False):
     str_to_txtfile(s2, fout)
 
 
-def decrypt_file(fin, fout):
+def decrypt_file(fin, fout, prompt_lines=1,lines=0):
     s = str_from_txtfile(fin)
-    s2 = decrypt_bytes(s)
+    s2 = decrypt_bytes(s, prompt_lines,lines)
     bytes_to_file(s2, fout)
