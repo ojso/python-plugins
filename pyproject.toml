@@ -30,6 +30,7 @@ dependencies = [
 cryptography = ["cryptography"]
 requests = ["requests"]
 sqlalchemy = ["SQLAlchemy"]
+wtforms = ["WTForms"]
 pillow = ["pillow"]
 qrcode = ["qrcode"]
 jwt = ["PyJWT"]
