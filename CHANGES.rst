@@ -1,3 +1,10 @@
+v0.1.8
+------
+
+Released 2024-11-19
+
+- add examples for learning
+
 v0.1.7
 ------
 
