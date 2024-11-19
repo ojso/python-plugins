@@ -56,27 +56,8 @@ class TestStr2List:
         password = rand_letter(16)
         encrypted_list = encrypt_str_to_list(s, password)
         with pytest.raises(Exception):
-            s1 = decrypt_list_to_str(encrypted_list)
+            s1 = decrypt_list_to_str([None] + encrypted_list[1:])
         s2 = decrypt_list_to_str(encrypted_list, password)
         assert s == s2
         s3 = decrypt_list_to_str([None] + encrypted_list[1:], password)
         assert s == s3
-
-    def test_encrypt_decrypt_with_prefix(self):
-        s = rand_sentence(random.randint(10, 100))
-        prefix = rand_letter(16)
-        encrypted_list = encrypt_str_to_list(s, prefix=prefix)
-        with pytest.raises(Exception):
-            s1 = decrypt_list_to_str(encrypted_list)
-        s2 = decrypt_list_to_str(encrypted_list, prefix=prefix)
-        assert s == s2
-
-    def test_encrypt_decrypt_with_password_prefix(self):
-        s = rand_sentence(random.randint(10, 100))
-        password = rand_letter(16)
-        prefix = rand_letter(16)
-        encrypted_list = encrypt_str_to_list(s, password, prefix)
-        with pytest.raises(Exception):
-            s1 = decrypt_list_to_str(encrypted_list, prefix=prefix)
-        s2 = decrypt_list_to_str(encrypted_list, password, prefix)
-        assert s == s2

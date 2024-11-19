@@ -54,34 +54,26 @@ def str_randsplit_to_list(s, n1=10, n2=30):
     return r
 
 
-def encrypt_bytes_to_list(s: bytes, password=None, prefix=None):
+def encrypt_bytes_to_list(s: bytes, password=None):
     if password is None:
         password = rand_letter(random.randint(6, 16))
-        out_password = password
-    else:
-        out_password = "-"
-    if prefix is not None:
-        password = str(prefix) + password
-
     key, safe_salt, times = get_key(password)
 
     cipher_suite = Fernet(key)
     encrypted_data = cipher_suite.encrypt(s)
     safe_data = bytes_to_url64str(encrypted_data)
 
-    list_out = [out_password, safe_salt, str(times)] + str_randsplit_to_list(safe_data)
+    list_out = [password, safe_salt, str(times)] + str_randsplit_to_list(safe_data)
 
     return list_out
 
 
-def decrypt_list_to_bytes(list_in, password=None, prefix=None) -> bytes:
+def decrypt_list_to_bytes(list_in, password=None) -> bytes:
     _password, safe_salt, _times, *_data = list_in
     if password is None:
         password = _password
     else:
         password = password
-    if prefix is not None:
-        password = str(prefix) + password
 
     times = int(_times)
     s = "".join(_data)
@@ -91,11 +83,11 @@ def decrypt_list_to_bytes(list_in, password=None, prefix=None) -> bytes:
     return decrypted_bytes
 
 
-def encrypt_str_to_list(s: str, password=None, prefix=None):
-    arr = encrypt_bytes_to_list(s.encode(), password, prefix)
+def encrypt_str_to_list(s: str, password=None):
+    arr = encrypt_bytes_to_list(s.encode(), password)
     return arr
 
 
-def decrypt_list_to_str(list_in, password=None, prefix=None):
-    decrypted_bytes = decrypt_list_to_bytes(list_in, password, prefix)
+def decrypt_list_to_str(list_in, password=None):
+    decrypted_bytes = decrypt_list_to_bytes(list_in, password)
     return decrypted_bytes.decode()
