@@ -1,10 +1,10 @@
 import re
-from wtforms import fields as wtforms_fields
+import wtforms.fields
 from ..widgets.select import Select2Widget
 from ..widgets.select import Select2TagsWidget
 
 
-class Select2Field(wtforms_fields.SelectField):
+class Select2Field(wtforms.fields.SelectField):
     """
     `Select2 <https://github.com/ivaynberg/select2>`_ styled select widget.
 
@@ -68,7 +68,7 @@ class Select2Field(wtforms_fields.SelectField):
         super(Select2Field, self).pre_validate(form)
 
 
-class Select2TagsField(wtforms_fields.StringField):
+class Select2TagsField(wtforms.fields.StringField):
     """`Select2 <http://ivaynberg.github.com/select2/#tags>`_ styled text field.
     You must include select2.js, form-x.x.x.js and select2 stylesheet for it to work.
     """

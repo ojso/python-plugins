@@ -1,7 +1,10 @@
 from typing import Optional
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
-from ...random.random_str import secret_token
+import secrets
+
+def secret_token():
+    return secrets.token_hex(32)
 
 
 class TokenMixin:

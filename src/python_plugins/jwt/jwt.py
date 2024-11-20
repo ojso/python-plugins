@@ -26,12 +26,3 @@ def jwt_decode(encoded, key: str, algorithm="HS256"):
 
     payload = jwt.decode(encoded, key, algorithm)
     return payload
-
-
-#     try:
-#         ...
-#     except Exception as e:
-#         # import sys
-#         # print(sys.exc_info())
-#         # return None,str(e)
-#         return None

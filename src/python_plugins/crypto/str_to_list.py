@@ -1,10 +1,13 @@
 import base64
 import os
 import random
+import string
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from ..random import rand_letter
+
+def rand_letter(n: int):
+    return "".join(random.choices(string.ascii_letters + string.digits, k=n))
 
 
 def bytes_to_url64str(bstr: bytes):

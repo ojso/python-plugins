@@ -1,10 +1,10 @@
 import time
 import datetime
-from wtforms import fields as wtforms_fields
+import wtforms.fields
 from ..widgets.datetime import DateTimePickerWidget
 from ..widgets.datetime import TimePickerWidget
 
-class DateTimeField(wtforms_fields.DateTimeField):
+class DateTimeField(wtforms.fields.DateTimeField):
     """
     Allows modifying the datetime format of a DateTimeField using form_args.
     """
@@ -28,7 +28,7 @@ class DateTimeField(wtforms_fields.DateTimeField):
         )
 
 
-class TimeField(wtforms_fields.Field):
+class TimeField(wtforms.fields.Field):
     """
     A text field which stores a `datetime.time` object.
     Accepts time string in multiple formats: 20:10, 20:10:00, 10:00 am, 9:30pm, etc.
@@ -59,7 +59,7 @@ class TimeField(wtforms_fields.Field):
         :param kwargs:
             Any additional parameters
         """
-        super(TimeField, self).__init__(label, validators, **kwargs)
+        super().__init__(label, validators, **kwargs)
 
         self.formats = formats or (
             "%H:%M:%S",

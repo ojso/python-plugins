@@ -42,14 +42,19 @@ mixins
 .. code-block:: python
 
    from flask_sqlalchemy import SQLAlchemy
+   from sqlalchemy.orm import DeclarativeBase
+   
    from python_plugins.models.mixins import PrimaryKeyMixin
    from python_plugins.models.mixins import UserMixin
    from python_plugins.models.mixins import DataMixin
    from python_plugins.models.mixins import TimestampMixin
 
-   db = SQLAlchemy()
+   class Base(DeclarativeBase):
+      pass
 
-   class User(PrimaryKeyMixin, DataMixin, TimestampMixin, UserMixin, db.models):
+   db = SQLAlchemy(model_class=Base)
+
+   class User(db.models,PrimaryKeyMixin, DataMixin, TimestampMixin, UserMixin):
       __tablename__ = "users"
 
 remove_pycache
