@@ -8,8 +8,6 @@ Welcome to python-plugins's documentation!
    :caption: Contents:
 
    usage
-   api
-   examples
    changes
 
 Indices and tables

@@ -57,15 +57,35 @@ mixins
    class User(db.models,PrimaryKeyMixin, DataMixin, TimestampMixin, UserMixin):
       __tablename__ = "users"
 
-remove_pycache
+walk_remove_dir
 =======================
 
 .. code-block:: python
 
-    from  python_plugins.utils import remove_pycache
+    from  python_plugins.utils import remove,remove_pycache,remove_ipynb_checkpoints
 
     remove_pycache()   # default is "."
     remove_pycache("./tests")
+
+    remove(dir,rm_dir_name)
+
+
+encrypt,decrypt
+================
+
+.. code-block:: python
+
+    from python_plugins.crypto import encrypt_txtfile,decrypt_txtfile
+
+    # encrypt
+    encrypt_txtfile(txtfile)
+    encrypt_txtfile(txtfile,".")
+    encrypt_txtfile(txtfile, newfile, password=password)
+    
+    # decrypt
+    decrypt_txtfile(encryptedfile)
+    decrypt_txtfile(encryptedfile,".")
+    decrypt_txtfile(encryptedfile, srcfile, password=password)     
 
 
 weixin.wechat

@@ -1,3 +1,10 @@
+v0.2.1
+------
+
+Released 2024-11-23
+
+- utils.walk_remove_dir
+
 v0.2.0
 ------
 
