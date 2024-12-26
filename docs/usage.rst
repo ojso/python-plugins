@@ -54,7 +54,7 @@ mixins
 
    db = SQLAlchemy(model_class=Base)
 
-   class User(db.models,PrimaryKeyMixin, DataMixin, TimestampMixin, UserMixin):
+   class User(db.Model,PrimaryKeyMixin, DataMixin, TimestampMixin, UserMixin):
       __tablename__ = "users"
 
 walk_remove_dir

@@ -1,3 +1,10 @@
+v0.2.2
+------
+
+Released 2024-12-27
+
+- update-icons
+
 v0.2.1
 ------
 
@@ -10,7 +17,7 @@ v0.2.0
 
 Released 2024-11-20
 
-- add forms
+- add random
 
 
 v0.1.9
@@ -18,7 +25,7 @@ v0.1.9
 
 Released 2024-11-19
 
-- add forms
+- add convert
 
 
 v0.1.8
@@ -62,7 +69,7 @@ v0.1.3
 
 Released 2024-09-19
 
-- support random_str,jwt,hash_file,fernet
+- support hash_file,fernet
 
 v0.1.2
 ------
