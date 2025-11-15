@@ -4,18 +4,12 @@ crypto
 
 .. autoclass:: python_plugins.crypto.cipher.AesCipher
     :members:
-    :undoc-members:
 
-.. code-block:: python
+.. autofunction:: python_plugins.crypto.encrypt_txtfile
+.. autofunction:: python_plugins.crypto.decrypt_txtfile
 
-    from python_plugins.crypto import encrypt_txtfile,decrypt_txtfile
+.. autoclass:: python_plugins.crypto.Zip7Mix
+    :members:
 
-    # encrypt
-    encrypt_txtfile(txtfile)
-    encrypt_txtfile(txtfile,".")
-    encrypt_txtfile(txtfile, encryptfile, password=password)
-    
-    # decrypt
-    decrypt_txtfile(encryptedfile)
-    decrypt_txtfile(encryptedfile,".")
-    decrypt_txtfile(encryptedfile, decryptfile, password=password) 
+.. autoclass:: python_plugins.crypto.TarMix
+    :members:

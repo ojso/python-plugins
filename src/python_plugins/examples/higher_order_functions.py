@@ -1,17 +1,18 @@
 import functools
 
 # lambda parameters: expression
+print("Higher-Order Functions in Python")
 
 lst = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-print(lst)
+print("lst=",lst)
 
 # map(function, iterable, *iterables) -> iterable
 
-lst_2 = list(map(lambda i: i**2, lst))
+print("list(map(lambda i: i**2, lst))=")
+print(lst_2:=list(map(lambda i: i**2, lst)))
 
-print(lst_2)
-
+print("[i**2 for i in lst]=")
 print([i**2 for i in lst])
 
 lst_3 = list(map(lambda x, y: x + y, lst, lst_2))

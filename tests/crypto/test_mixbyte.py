@@ -88,4 +88,5 @@ class TestMixByte:
         if os.path.exists(test_compress_file):
             mix = MixByte()
             result = mix.list_archive_mix(test_compress_file)
-            print(result)
+            # print(result)
+            assert "pwd" in result

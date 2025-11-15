@@ -1,3 +1,10 @@
+v1.0.1
+------
+
+Released 2025-11-15
+
+- tkinter_calculator
+
 v1.0.0
 ------
 

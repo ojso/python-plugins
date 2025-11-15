@@ -5,7 +5,6 @@ from python_plugins.weixin.wechat import Wechat
 from python_plugins.weixin.wechat_crypt import get_signature
 from python_plugins.weixin.wechat_crypt import MessageCrypt
 from python_plugins.random import rand_digit, rand_letter
-from python_plugins.convert.xml import xml2dict
 
 
 test_wechat_app = {
@@ -66,7 +65,7 @@ class TestWechat:
 
         mywechat = MyWechat()
         r = mywechat.chat(query, xml)
-        data = xml2dict(r)
+        data = mywechat.xml2dict(r)
         # print(data)
         assert data["ToUserName"] == openid
         assert data["FromUserName"] == server_id
@@ -117,14 +116,14 @@ class TestWechat:
 
         r = mywechat.chat(query, xml2)
         # print(r)
-        r_dict = xml2dict(r)
+        r_dict = mywechat.xml2dict(r)
         r_xml = mc.decrypt_msg(
             r_dict["TimeStamp"],
             r_dict["Nonce"],
             r_dict["Encrypt"],
             r_dict["MsgSignature"],
         )
-        data = xml2dict(r_xml)
+        data = mywechat.xml2dict(r_xml)
         # print(data)
         assert data["ToUserName"] == openid
         assert data["FromUserName"] == server_id

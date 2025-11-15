@@ -13,6 +13,14 @@ class TarMix(MixByte):
         pass
 
     def compress(self, file_or_dir, archive_path=None):
+        """Compress file_or_dir into a tar.gz archive.
+
+        examples::
+
+            compress("myfile.txt")  # output to myfile.txt.tar.gz
+            compress("myfolder")  # output to myfolder.tar.gz
+            compress("myfile.txt", "archive.tar.gz")
+        """
         path_obj = Path(file_or_dir)
         if not path_obj.exists():
             raise
@@ -26,6 +34,13 @@ class TarMix(MixByte):
         return ("ok", archive_path)
 
     def uncompress(self, archive_path, output_path=None):
+        """Uncompress tar.gz archive into output_path.
+
+        examples::
+
+            uncompress("archive.tar.gz")  # output to folder archive_extracted
+            uncompress("archive.tar.gz", "output_folder")  # output to output_folder
+        """
         archive_obj = Path(archive_path)
 
         if output_path is None:
@@ -46,6 +61,13 @@ class TarMix(MixByte):
         return ("ok", output_path)
 
     def mix(self, file_or_dir, archive_path=None):
+        """Mix file_or_dir into a custom encrypted tar.gz archive.
+
+        examples::
+
+            mix("myfile.txt")  # output to myfile.txt.tar.gz with random password
+            mix("myfolder", "archive.tar.gz")  # output to archive.tar.gz with random password
+        """
         path_obj = Path(file_or_dir)
         if not path_obj.exists():
             raise
@@ -75,6 +97,13 @@ class TarMix(MixByte):
         return ("ok", archive_path)
 
     def unmix(self, archive_path, output_path=None):
+        """Unmix custom encrypted tar.gz archive into output_path.
+        
+        examples::
+
+            unmix("archive.tar.gz")  # output to folder archive_extracted
+            unmix("archive.tar.gz", "output_folder")  # output to output_folder
+        """
         archive_obj = Path(archive_path)
 
         if output_path is None:

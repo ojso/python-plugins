@@ -1,11 +1,24 @@
-import hashlib
-from python_plugins.convert import xml2dict
+import xml.etree.cElementTree as ET
 from .wechat_crypt import MessageCrypt
 from .wechat_crypt import get_signature
 from .format_response import get_wechat_xml_response
 
 
 class Wechat:
+    """Wechat base class for handling WeChat messages.
+    
+    example::
+    
+        from python_plugins.weixin.wechat import Wechat
+
+        class MyWechat(Wechat):
+            def get_app(self) -> dict:
+                return "<your app>"
+
+        mywechat = MyWechat("name")
+        mywechat.verify(query)
+        mywechat.chat(query,content)    
+    """
 
     def __init__(self, name=None):
         self.name = name
@@ -20,6 +33,13 @@ class Wechat:
         return
 
     def verify(self, args):
+        """wechat verify method.
+
+        examples::
+
+            verify(query)
+
+        """
         signature = args["signature"]
         timestamp = args["timestamp"]
         nonce = args["nonce"]
@@ -31,13 +51,20 @@ class Wechat:
             return
 
     def chat(self, args, content):
+        """wechat chat method.
+
+        examples::
+
+            chat(query, content)
+
+        """
         self.openid = args.get("openid")
         msg_signature = args.get("msg_signature", "")
         timestamp = args.get("timestamp", "")
         nonce = args.get("nonce", "")
         # 加密标记
         encrypt_type = args.get("encrypt_type")
-        xml_dict = xml2dict(content)
+        xml_dict = self.xml2dict(content)
 
         if not encrypt_type:
             self.input = xml_dict
@@ -50,7 +77,7 @@ class Wechat:
             xml_decrypted = mc.decrypt_msg(
                 timestamp, nonce, xml_dict["Encrypt"], msg_signature
             )
-            self.input = xml2dict(xml_decrypted)
+            self.input = self.xml2dict(xml_decrypted)
             self.dispatch()
             self.get_xml_response()
             # encrypt
@@ -119,17 +146,23 @@ class Wechat:
 
     def get_xml_response(self):
         self.data_response = {
-            "type" : self.answer["type"],
+            "type": self.answer["type"],
             "toUser": self.fromUser,
             "fromUser": self.toUser,
         }
-        
+
         match self.answer["type"]:
-            case "text":                
+            case "text":
                 self.data_response["content"] = self.answer["content"]
             case "news":
                 self.data_response["articles"] = self.answer["articles"]
-                
+
         self.xml_response = get_wechat_xml_response(self.data_response)
-        
+
         return
+
+    @staticmethod
+    def xml2dict(xmlstr):
+        xml_tree = ET.fromstring(xmlstr)
+        xmldict = {k.tag: k.text for k in xml_tree}
+        return xmldict

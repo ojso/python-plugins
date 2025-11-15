@@ -5,6 +5,7 @@ import filecmp
 from python_plugins.random.random_str import rand_sentence
 from python_plugins.crypto import encrypt_txtfile
 from python_plugins.crypto import decrypt_txtfile
+from python_plugins.crypto.crypt_txtfile import SPLIT_TAG
 
 tmp_path = op.join(os.path.dirname(os.path.abspath(__file__)), "tmp")
 
@@ -19,6 +20,20 @@ def _create_temp():
     if not op.exists(tmp_path):
         os.mkdir(tmp_path)
         return tmp_path
+
+def _create_rand_file(path):
+    with open(path, "w") as f:
+        f.write(rand_sentence(30))
+        f.write("\n")
+        f.write(SPLIT_TAG)
+        f.write("\n")
+        f.write(rand_sentence(30))
+
+def _create_fix_file(path):
+    with open(path, "w") as f:
+        f.write("abcdefghijklmnopqrstuvwxyz")
+        f.write("\n")
+        f.write("0123456789")
 
 
 def safe_delete(path):
@@ -41,11 +56,33 @@ def test_crypto_file():
     if create_tmp:
         print(create_tmp)
 
-    with open(path_1, "w") as f:
-        f.write(rand_sentence(30))
-        f.write(rand_sentence(30))
+    _create_fix_file(path_1)
 
-    encrypt_txtfile(path_1, path_2)
+    encrypt_txtfile(path_1, path_2, skip_password=True)
+    # decrypt_txtfile(path_2)
+    decrypt_txtfile(path_2, path_3)
+    with open(path_1, "r") as f1, open(path_3, "r") as f3:
+        content_1 = f1.read()
+        content_3 = f3.read()
+    
+    lines_1 = content_1.splitlines()
+    lines_3 = content_3.splitlines()
+    assert lines_3[0] == path_1
+    assert lines_3[1] == SPLIT_TAG
+    for i, line in enumerate(lines_1):
+        assert line == lines_3[i + 2]
+
+    _remove_testfiles()
+
+
+def test_crypto_file_with_split():
+    create_tmp = _create_temp()
+    if create_tmp:
+        print(create_tmp)
+
+    _create_rand_file(path_1)
+
+    encrypt_txtfile(path_1, path_2, skip_password=True)
     # decrypt_txtfile(path_2)
     decrypt_txtfile(path_2, path_3)
     cmp_result = filecmp.cmp(path_1, path_3)
@@ -55,9 +92,7 @@ def test_crypto_file():
 
 def test_crypto_file_with_password():
 
-    with open(path_1, "w") as f:
-        f.write(rand_sentence(30))
-        f.write(rand_sentence(30))
+    _create_rand_file(path_1)
 
     password = rand_sentence(10)
     encrypt_txtfile(path_1, path_2, password=password)
@@ -74,11 +109,9 @@ def test_crypto_file_with_password():
 @pytest.mark.skip
 def test_crypto_file_with_input_password():
 
-    with open(path_1, "w") as f:
-        f.write(rand_sentence(30))
-        f.write(rand_sentence(30))
+    _create_rand_file(path_1)
 
-    encrypt_txtfile(path_1, path_2, password='[input]')
+    encrypt_txtfile(path_1, path_2)
     decrypt_txtfile(path_2, path_3)
     cmp_result = filecmp.cmp(path_1, path_3)
     assert cmp_result is True

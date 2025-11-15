@@ -19,6 +19,13 @@ class Zip7Mix(MixByte):
             return False
 
     def compress(self, file_or_dir, archive_path=None, pwd=None, silent=True):
+        """
+        examples::
+        
+            compress("myfile.txt")  # output to myfile.txt.7z
+            compress("myfolder")  # output to myfolder.7z
+            compress("myfile.txt", "archive.7z", pwd="mypassword")
+        """
         path_obj = Path(file_or_dir)
         if not path_obj.exists():
             raise
@@ -61,6 +68,13 @@ class Zip7Mix(MixByte):
         overwrite: bool = True,
         silent=True,
     ):
+        """
+        Examples::
+        
+            uncompress("archive.7z")  # output to folder archive_extracted
+            uncompress("archive.7z", "output_folder")  # output to output_folder
+            uncompress("archive.7z", pwd="mypassword")
+        """
         archive_obj = Path(archive_path)
 
         if output_path is None:
@@ -90,6 +104,12 @@ class Zip7Mix(MixByte):
             return ("fail", f"{e}")
 
     def mix(self, file_or_dir, archive_path=None):
+        """
+        examples::
+
+            mix("myfile.txt")  # output to myfile.txt.7z with random password
+            mix("myfolder", "archive.7z")  # output to archive.7z with random password
+        """
         pwd = self.generate_password(64)
         r_compress = self.compress(file_or_dir, archive_path=archive_path, pwd=pwd)
         if r_compress[0] != "ok":
@@ -107,6 +127,12 @@ class Zip7Mix(MixByte):
         return ("ok", archive_path)
 
     def unmix(self, archive_path, output_path=None):
+        """
+        examples::
+
+            unmix("archive.7z")  # output to folder archive_extracted
+            unmix("archive.7z", "output_folder")  # output to output_folder
+        """
         file_size = op.getsize(archive_path)
         with open(archive_path, "rb") as f:
             if file_size > 1000:
