@@ -1,3 +1,9 @@
+v1.0.3
+------
+Released 2026-02-08
+
+- sqlalchemy inspect model
+
 v1.0.2
 ------
 

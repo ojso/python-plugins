@@ -21,7 +21,7 @@ class Zip7Mix(MixByte):
     def compress(self, file_or_dir, archive_path=None, pwd=None, silent=True):
         """
         examples::
-        
+
             compress("myfile.txt")  # output to myfile.txt.7z
             compress("myfolder")  # output to myfolder.7z
             compress("myfile.txt", "archive.7z", pwd="mypassword")
@@ -70,7 +70,7 @@ class Zip7Mix(MixByte):
     ):
         """
         Examples::
-        
+
             uncompress("archive.7z")  # output to folder archive_extracted
             uncompress("archive.7z", "output_folder")  # output to output_folder
             uncompress("archive.7z", pwd="mypassword")
@@ -152,3 +152,13 @@ class Zip7Mix(MixByte):
             archive_path=archive_path, output_path=output_path, pwd=pwd
         )
         return result
+
+    def unpwd(self, archive_path):
+        file_size = op.getsize(archive_path)
+        with open(archive_path, "rb") as f:
+            if file_size > 1000:
+                f.seek(-1000, os.SEEK_END)
+            data = f.read()
+        parse_result = self.parse_tail_link_blocks(data)
+        pwd = parse_result["pwd"].decode("utf-8")
+        return pwd
