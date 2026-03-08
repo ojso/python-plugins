@@ -1,7 +1,7 @@
 import ast
 from sqlalchemy import inspect
-from python_plugins.sqla.models.multpk import Singlepk
-from python_plugins.sqla.models.multpk import Multpk
+from ..models.multpk import Singlepk
+from ..models.multpk import Multpk
 from .. import db
 
 

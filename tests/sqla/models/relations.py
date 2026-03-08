@@ -1,14 +1,33 @@
 from typing import List
 from typing import Set
-from .. import db
-from ..orm import Mapped
-from ..orm import mapped_column
-from ..orm import ForeignKey
-from ..orm import relationship
-from ..orm import Table
-from ..orm import Column
-from ..orm import Integer
+from . import db
+from . import Mapped
+from . import mapped_column
+from . import ForeignKey
+from . import relationship
+from . import Table
+from . import Column
+from . import Integer
 
+
+class TrainModel1(db.Model):
+    __tablename__ = "train_model1"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str]
+
+class TrainModel2(db.Model):
+    __tablename__ = "train_model2"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str]
+    model1_id: Mapped[int] = mapped_column(ForeignKey("train_model1.id"))
+    model1: Mapped[TrainModel1] = relationship()
+
+class TrainModel3(db.Model):
+    __tablename__ = "train_model3"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str]
+    model2_id: Mapped[int] = mapped_column(ForeignKey("train_model2.id"))
+    model2: Mapped[TrainModel2] = relationship()
 
 class OneToManyParent(db.Model):
     __tablename__ = "one_to_many_parent"

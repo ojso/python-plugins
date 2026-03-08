@@ -9,6 +9,7 @@ Welcome to python-plugins's documentation!
 
    install
    api/index
+   examples/index
    changes
 
 Indices and tables

@@ -1,6 +1,6 @@
 from sqlalchemy.schema import CreateTable
 from sqlalchemy import create_mock_engine
-from python_plugins.sqla.models.demo import Demo
+from ..models.demo import Demo
 
 
 def mock_engine_for_dialect(dialect_name: str):

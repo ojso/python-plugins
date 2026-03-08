@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import current_app
+from flask import has_request_context
 from flask import g
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -68,9 +69,9 @@ class Db:
 
     def _make_scoped_session(self, options):
         session_factory = sessionmaker(**options)
-        return scoped_session(session_factory, scopefunc=self._get_app_g_id)
+        return scoped_session(session_factory, scopefunc=self._get_scope_id)
 
-    def _get_app_g_id(self) -> int:
+    def _get_scope_id(self) -> int:
         return id(g._get_current_object())
 
     def _remove_session(self, exception=None):

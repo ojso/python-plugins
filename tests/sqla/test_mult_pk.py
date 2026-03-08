@@ -1,6 +1,6 @@
 from python_plugins.sqla.orm import select
 from python_plugins.sqla.orm import delete
-from python_plugins.sqla.models.multpk import Multpk
+from .models.multpk import Multpk
 from . import db
 
 

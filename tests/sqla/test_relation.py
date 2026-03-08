@@ -1,11 +1,11 @@
-from python_plugins.sqla.models.relations import OneToManyParent
-from python_plugins.sqla.models.relations import ManyToOneChild
-from python_plugins.sqla.models.relations import ManyToOneChild2
-from python_plugins.sqla.models.relations import ManyToOneChild3
-from python_plugins.sqla.models.relations import OneToOneParent
-from python_plugins.sqla.models.relations import OneToOneChild
-from python_plugins.sqla.models.relations import ManyToManyLeft
-from python_plugins.sqla.models.relations import ManyToManyRight
+from .models.relations import OneToManyParent
+from .models.relations import ManyToOneChild
+from .models.relations import ManyToOneChild2
+from .models.relations import ManyToOneChild3
+from .models.relations import OneToOneParent
+from .models.relations import OneToOneChild
+from .models.relations import ManyToManyLeft
+from .models.relations import ManyToManyRight
 from . import db
 
 

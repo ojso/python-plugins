@@ -18,10 +18,42 @@ from sqlalchemy.ext.associationproxy import AssociationProxy
 from sqlalchemy.schema import Column
 
 from .. import db
-from .. import Demo
+from ..models.demo import Demo
+from ..models.demo import Address
 
 
 class TestMapper:
+    def test_inspect_attrs(self):
+        Model = Demo
+        mapper = inspect(Model)
+        columns = mapper.columns
+        relationships = mapper.relationships
+
+        info = {}
+        info["primary_key"] = mapper.primary_key
+
+        attrs = []
+
+        for key,attr in Model.__dict__.items():
+            # attr = mapper.attrs.get(key)
+            if key in columns:
+                c = columns[key]
+                # print(key, attr,type(attr),c, type(c),c.foreign_keys,c.primary_key)
+                attrs.append((key, attr, "column",c))
+            elif key in relationships:
+                r = relationships[key]
+                # print(key, attr,type(attr),r, type(r),r.direction.name, r.uselist)
+                attrs.append((key, attr, "relationship",r))
+        info["attrs"] = attrs
+        print(info)
+
+        for a in attrs:
+            print(a[1],type(a[1]))
+            x = getattr(Model,a[0])
+            assert x is a[1]
+
+
+
     def test_inspect(self):
         Model = Demo
         mapper = inspect(Model)

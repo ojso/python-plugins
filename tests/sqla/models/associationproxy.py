@@ -1,16 +1,16 @@
 from typing import Final
 from typing import List
-from .. import db
-from ..orm import Mapped
-from ..orm import mapped_column
-from ..orm import ForeignKey
-from ..orm import relationship
-from ..orm import Table
-from ..orm import Column
-from ..orm import Integer
-from ..orm import String
-from ..orm import association_proxy
-from ..orm import AssociationProxy
+from . import db
+from . import Mapped
+from . import mapped_column
+from . import ForeignKey
+from . import relationship
+from . import Table
+from . import Column
+from . import Integer
+from . import String
+from . import association_proxy
+from . import AssociationProxy
 
 
 class AssociationProxyChild(db.Model):

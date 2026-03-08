@@ -1,6 +1,6 @@
 from sqlalchemy import inspect
 from python_plugins.sqla.orm import select
-from python_plugins.sqla.models.polymorphic import Employee, Manager, Engineer
+from .models.polymorphic import Employee, Manager, Engineer
 from . import db
 
 

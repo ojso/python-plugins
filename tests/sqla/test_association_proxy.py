@@ -1,7 +1,7 @@
 from python_plugins.sqla.orm import select
 from python_plugins.sqla.orm import selectinload
-from python_plugins.sqla.models.association_proxy import AssociationProxyParent
-from python_plugins.sqla.models.association_proxy import AssociationProxyChild
+from .models.associationproxy import AssociationProxyParent
+from .models.associationproxy import AssociationProxyChild
 from . import db
 
 

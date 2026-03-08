@@ -1,6 +1,6 @@
 from python_plugins.sqla.orm import select
 from python_plugins.sqla.orm import selectinload
-from python_plugins.sqla.models.tree_node import TreeNode
+from .models.tree_node import TreeNode
 from . import db
 
 

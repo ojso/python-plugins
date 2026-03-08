@@ -4,31 +4,30 @@ from datetime import date
 from datetime import time
 import enum
 
-from .. import db
-from ..orm import Integer
-from ..orm import Boolean
-from ..orm import String
-from ..orm import Float
-from ..orm import DateTime
-from ..orm import Date
-from ..orm import Time
-from ..orm import LargeBinary
-from ..orm import Enum
-from ..orm import JSON
-from ..orm import Mapped
-from ..orm import mapped_column
-from ..orm import relationship
-from ..orm import composite
-from ..orm import synonym
-from ..orm import Table
-from ..orm import Column
-from ..orm import ForeignKey
-from ..orm import hybrid_property
-from ..orm import hybrid_method
-from ..orm import association_proxy
-from ..orm import AssociationProxy
+from . import db
+from . import Integer
+from . import Boolean
+from . import String
+from . import Float
+from . import DateTime
+from . import Date
+from . import Time
+from . import LargeBinary
+from . import Enum
+from . import JSON
+from . import Mapped
+from . import mapped_column
+from . import relationship
+from . import composite
+from . import synonym
+from . import Table
+from . import Column
+from . import ForeignKey
+from . import hybrid_property
+from . import hybrid_method
+from . import association_proxy
+from . import AssociationProxy
 
-# see https://docs.sqlalchemy.org/en/20/orm/extensions/associationproxy.html
 
 class Point:
     x: int
@@ -44,7 +43,7 @@ class Status(enum.Enum):
 
 class Demo(db.Model):
     __tablename__ = "demo"
-    
+
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(unique=True)
     first_name: Mapped[str]

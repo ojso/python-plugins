@@ -1,8 +1,8 @@
 from python_plugins.sqla.orm import delete
 from python_plugins.sqla.utils import select_pk_values
 from python_plugins.sqla.utils import delete_by_pk_ids
-from python_plugins.sqla.models.multpk import Singlepk
-from python_plugins.sqla.models.multpk import Multpk
+from ..models.multpk import Singlepk
+from ..models.multpk import Multpk
 from .. import db
 
 def test_normal():
