@@ -1,3 +1,10 @@
+v1.0.4
+------
+Released 2026-04-12
+
+- sphinx google example
+- find_empty_dirs in ospath.walk
+
 v1.0.3
 ------
 Released 2026-02-08
