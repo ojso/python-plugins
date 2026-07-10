@@ -11,7 +11,7 @@ def test_run():
         assert mapper.class_.__tablename__ == "employee"
         assert mapper.local_table.name == "employee"
 
-    with db.Session() as session:
+    with db.session() as session:
         db.create_all()
         session.add_all(
             [

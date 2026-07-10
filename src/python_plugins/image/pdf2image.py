@@ -1,10 +1,13 @@
 import fitz  # PyMuPDF
-from PIL import Image
-import os
+from PIL import Image # Pillow
+
 
 def pdf_to_long_image(pdf_path, output_path, dpi=200):
     """
     Convert a multi-page PDF into a single vertical long image.
+
+    example:
+        pdf_to_long_image("input.pdf", "output.png", dpi=300)
 
     Args:
         pdf_path: Path to the input PDF file.
@@ -31,7 +34,7 @@ def pdf_to_long_image(pdf_path, output_path, dpi=200):
     total_height = sum(img.height for img in images)
     # Assume all pages have the same width; take width from the first page
     width = images[0].width
-    long_image = Image.new('RGB', (width, total_height))
+    long_image = Image.new("RGB", (width, total_height))
 
     # 4. Paste each page image vertically
     y_offset = 0
@@ -42,10 +45,3 @@ def pdf_to_long_image(pdf_path, output_path, dpi=200):
     # 5. Save the final long image
     long_image.save(output_path)
     print(f"✅ Successfully converted PDF to long image: {output_path}")
-
-# --- Example usage ---
-if __name__ == '__main__':
-    pdf_file = "example.pdf"          # Replace with your PDF path
-    output_file = "output_long.png"   # Output image path
-    pdf_to_long_image(pdf_file, output_file, dpi=300)  # Use 300 DPI for high quality
-

@@ -5,7 +5,7 @@ from . import db
 
 
 def test_multpk():
-    with db.Session() as session:
+    with db.session() as session:
         db.create_all()
         stmt = delete(Multpk)
         session.execute(stmt)
@@ -14,7 +14,7 @@ def test_multpk():
     mp11 = Multpk(id=1, id2=1, data="data1")
     mp12 = Multpk(id=1, id2=2, data="data2")
     mp21 = Multpk(id=2, id2=1, data="data3")
-    with db.Session() as session:
+    with db.session() as session:
         session.add_all(
             [
                 mp11,

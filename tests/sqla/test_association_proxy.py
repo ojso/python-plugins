@@ -6,7 +6,7 @@ from . import db
 
 
 def test_run():
-    with db.Session() as session:
+    with db.session() as session:
         c1 = AssociationProxyChild(name="Python")
         c2 = AssociationProxyChild(name="SQLAlchemy")
         c3 = AssociationProxyChild(name="Flask")

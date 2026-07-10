@@ -5,7 +5,7 @@ from . import db
 
 
 def test_create_table():
-    with db.Session() as session:
+    with db.session() as session:
         db.create_all()
         tn1 = TreeNode(data="root")
         tn2 = TreeNode(data="child1", parent=tn1)

@@ -5,8 +5,9 @@ from ..models.multpk import Singlepk
 from ..models.multpk import Multpk
 from .. import db
 
+
 def test_normal():
-    with db.Session() as session:
+    with db.session() as session:
         m1 = Singlepk(id=1, data="first")
         m2 = Singlepk(id=2, data="second")
         m3 = Singlepk(id=3, data="third")
@@ -43,12 +44,12 @@ def test_normal():
 
 def test_multiple_pk():
 
-    with db.Session() as session:
+    with db.session() as session:
         stmt = delete(Multpk)
         session.execute(stmt)
         session.commit()
 
-    with db.Session() as session:
+    with db.session() as session:
         m1 = Multpk(id=1, id2=1, data="first")
         m2 = Multpk(id=1, id2=2, data="second")
         m3 = Multpk(id=2, id2=1, data="third")
