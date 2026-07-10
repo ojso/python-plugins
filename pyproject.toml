@@ -29,6 +29,8 @@ dependencies = [
   "SQLAlchemy>=2.0",
   "requests>=2.32",
   "cryptography>=46.0",
+  "pymupdf>=1.28",
+  "pillow>=12.3",
 ]
 
 [project.urls]
